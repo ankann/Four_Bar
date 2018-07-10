@@ -1,0 +1,2 @@
+# Four_Bar
+This project was undertaken with the cardinal objective of optimization of transmission angle of a four-bar linkage with an optimum value of 90 degrees with a desired uncertainty via adjustment of the linkage lengths. In addition to the optimization of transmission angle, the program is also competent of graphical simulation and demonstrating the inevitable deviations in the functioning of a four-bar linkage mechanism from the actual function through an error curve for varied number of accuracy points.
