@@ -21,9 +21,9 @@ r_x=(theta_f-theta_s)/(x_f-x_s);
 x = x_s + (theta-theta_s)/r_x;
 y= cos(x);
 t0=0;
-s=zeros(100,1);
+s=ones(100,1);
 for r_y=100:-1:1
-phi=phi_s+ r_y*(y- y(1));
+    phi=phi_s+ r_y*(y- y(1));
     phi=deg2rad(phi);
     sum1=sum(cos(theta));
     sum2=sum(cos(phi));
@@ -48,41 +48,37 @@ phi=phi_s+ r_y*(y- y(1));
         %disp('hi');
         if(abs((C^2 + B^2 - E.^2)./(2*B*C))<1)
         %disp('not complex');
-    alfa = asin(A*sin(theta)./E);
-    beta = acos((E.^2 + C^2 - B^2)./(2*E*C));
-    tran=acos((C^2 + B^2 - E.^2)./(2*B*C)); 
-    t=[-abs(t1) -abs(t2) abs(t3);abs(t1) abs(t2) abs(t3);abs(t1) -abs(t2) -abs(t3);-abs(t1) abs(t2) -abs(t3)]';
-    if(t1==t(1,1) && t2== t(2,1) && t3== t(3,1))
-        %disp('crank-crank');
-    elseif(t1==t(1,2) && t2== t(2,2) && t3== t(3,2))
-         %disp('crank-rocker');
-    elseif(t1==t(1,3) && t2== t(2,3) && t3== t(3,3))
-         %disp('rocker-crank');
-    elseif(t1==t(1,4) && t2== t(2,4) && t3== t(3,4))
-         %disp('rocker-rocker');
-    else
-        %disp('non-grashof');
-        s(r_y)=n;
-%         disp(r_y);
-    end
-    else
-        %disp('complex');
-        t0(r_y)=1;
-        %disp(j);
-        continue;
+            alfa = asin(A*sin(theta)./E);
+            beta = acos((E.^2 + C^2 - B^2)./(2*E*C));
+            tran=acos((C^2 + B^2 - E.^2)./(2*B*C)); 
+            t=[-abs(t1) -abs(t2) abs(t3);abs(t1) abs(t2) abs(t3);abs(t1) -abs(t2) -abs(t3);-abs(t1) abs(t2) -abs(t3)]';
+            if(t1==t(1,1) && t2== t(2,1) && t3== t(3,1) && D<A && D< B && D<C && C>A && C>B)
+                s(r_y)=n;
+                break;
+                %disp('crank-crank');
+            elseif(t1==t(1,2) && t2== t(2,2) && t3== t(3,2))
+                s(r_y)=n;
+                break;
+                %disp('crank-rocker');
+            elseif(t1==t(1,3) && t2== t(2,3) && t3== t(3,3))
+                s(r_y)=n;
+                break;
+                %disp('rocker-crank');
+            elseif(t1==t(1,4) && t2== t(2,4) && t3== t(3,4))
+                s(r_y)=n;
+                break;
+                %disp('rocker-rocker');
+            else
+                %disp('non-grashof');
+                continue;
+            end
+        else
+            %disp('complex');
+            continue;
         end
     else
         %disp('complex');
-        t0(r_y)=1;
-        %disp(j);
         continue;
-    end
-end
-[m,n]=size(s);
-for i=1:n
-    if(s(i)==0)
-            r_y=i;
-        
     end
 end
 phi=phi_s+ r_y*(y- y(1));
@@ -98,23 +94,18 @@ phi=phi_s+ r_y*(y- y(1));
     A1=[1,sum2,-sum1;sum2,sum3,-sum6;sum1,sum6,-sum4];
     B1=[sum5,sum7,sum8];
     R= A1\B1';
- R=[   -0.5708   -0.0828    0.1477];
-
-% R=[  -0.6394   -0.2253    0.3776];
     R=R';
 
     D=1; A=D/R(2); C= D/R(3); B= sqrt(A^2+C^2+D^2-2*R(1)*A*C);
-%     disp(B^2+C^2-D^2);
-[m,n]=size(x);
-xo=linspace(0,f,n);
-yo=cos(xo);
+xx = 0:.1:f;
+yo=cos(xx);
 
 disp([A B C D]);
     t1=B+D-A-C;
     t2=D+C-A-B;
     t3=B+C-A-D;
     t=[-abs(t1) -abs(t2) abs(t3);abs(t1) abs(t2) abs(t3);abs(t1) -abs(t2) -abs(t3);-abs(t1) abs(t2) -abs(t3)]';
-    if(t1==t(1,1) && t2== t(2,1) && t3== t(3,1))
+    if(t1==t(1,1) && t2== t(2,1) && t3== t(3,1)&& D<A && D< B && D<C && C>A && C>B)
         disp('crank-crank');
     elseif(t1==t(1,2) && t2== t(2,2) && t3== t(3,2))
          disp('crank-rocker');
@@ -126,17 +117,16 @@ disp([A B C D]);
         disp('Non-grashof');
     end
 t=theta;
-xx = 0:.1:f;
 P1 = [0;0];
 P4 = D*[1;0];
-%disp((C.^2 + B.^2 - E.^2)./(2*B*C));
+disp((C.^2 + B.^2 - E.^2)./(2*B*C));
 P2 = A*[cos(theta); sin(theta)]; 
 E = sqrt(A^2 + D^2 - 2*A*D*cos(theta));
 alfa = asin(A*sin(theta)./E);
 beta = acos((E.^2 + C^2 - B^2)./(2*E*C));
 tran=acos((C.^2 + B.^2 - E.^2)./(2*B*C));
 P3 = [D - C*cos(alfa+beta); C*sin(alfa+beta)];
-disp(tran);
+% disp(tran);
 
 P3_x = P3(1,:);
 P3_y = P3(2,:);
@@ -150,17 +140,13 @@ P3_v = sqrt(P3_vx.^2 + P3_vy.^2);
 P3_a = sqrt(P3_ax.^2 + P3_ay.^2);
 
 yy = spline(x,y,xx);
-y1=y-spline(x,y,x);
-
+y1=yy-yo;
+y2=spline(xx,y1,x);
 for i=1:length(t)-1
    subplot(2,2,3);
-   set(gca,'XLim',[0 f],'YLim',[-1 1]);
-   plot(xo,yo,x(1:i),y(1:i),'o',xx,yy,x(1:i),y1(1:i),'o');
-   grid on
-   grid minor
-   hold on
    set(gca,'XLim',[0 f],'YLim',[-inf inf]);
-   plot(theta(1:i),tran(1:i),'r');
+   plot(xx,yo,'r',x(1:i),y(1:i),'--',xx,y1,'blue',x(1:i),y2(1:i),'o',theta(1:i),tran(1:i),'green');
+   legend('desired curve','estimated curve','error curve','presicion points','transmission angle');
    grid on
    grid minor
    hold on
@@ -182,8 +168,8 @@ for i=1:length(t)-1
    str4='.';
    str2 = ['Time elapsed: '  num2str(t(i)) ' s'];
    P3_text = text(P3(1,i),P3(2,i)+0.6,str1);
-   P3_text1 = text(P3(1,i),P3(2,i),str3,'color','red');
-   P1_text1 = text(P2(1,i),P2(2,i),str4,'color','red');
+%    P3_text1 = text(P3(1,i),P3(2,i),str3,'color','red');
+%    P1_text1 = text(P2(1,i),P2(2,i),str4,'color','red');
    Time = text(-2,6,str2);
    pause(0.005);
    if i<length(t1)
